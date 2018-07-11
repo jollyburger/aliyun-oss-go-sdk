@@ -85,6 +85,29 @@
     }
 ```
 
+### Put Object with callback
+```go
+   client, err := oss.New("Endpoint", "AccessKeyId", "AccessKeySecret")
+   if err != nil {
+	  // HandleError(err)
+   }
+
+   bucket, err := client.Bucket("my-bucket")
+   if err != nil {
+	  // HandleError(err)
+   }
+
+   opts := []Option {
+		oss.Callback("callBack") //callBack is base64-encoded and json-encoded string
+		oss.CallbackVar(callBackVar) //callBackVar is based64-encoded and json-encoded string
+   }
+   err = bucket.PutObjectFromFile("my-object", "file-path", opts)
+   if err != nil {
+	  // HandleError(err)
+   }
+
+```
+
 ### Get Object
 ```go
     client, err := oss.New("Endpoint", "AccessKeyId", "AccessKeySecret")
