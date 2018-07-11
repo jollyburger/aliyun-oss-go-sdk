@@ -282,6 +282,17 @@ func ResponseContentEncoding(value string) Option {
 func Process(value string) Option {
 	return addParam("X-Oss-Process", value)
 }
+
+//Callback is an option to set callback param
+func Callback(value string) Option {
+	return addParam("callback", value)
+}
+
+//CallbackVar is an option to set callback-var param
+func CallbackVar(value string) Option {
+	return addParam("callback-var", value)
+}
+
 func setHeader(key string, value interface{}) Option {
 	return func(params map[string]optionValue) error {
 		if value == nil {
@@ -325,6 +336,23 @@ func handleOptions(headers map[string]string, options []Option) error {
 	for k, v := range params {
 		if v.Type == optionHTTP {
 			headers[k] = v.Value.(string)
+		}
+	}
+	return nil
+}
+
+func handleParams(params map[string]interface{}, options []Option) error {
+	p := map[string]optionValue{}
+	for _, option := range options {
+		if option != nil {
+			if err := option(p); err != nil {
+				return err
+			}
+		}
+	}
+	for k, v := range p {
+		if v.Type == optionParam {
+			params[k] = v.Value
 		}
 	}
 	return nil
